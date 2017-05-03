@@ -1,0 +1,38 @@
+{
+  "name": "express-mysql-boilerplate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "knex migrate:latest && knex seed:run",
+    "dev": "cross-env NODE_ENV=development nodemon ./src/bin/server.js --exec babel-node",
+    "prod": "cross-env NODE_ENV=production babel-node ./src/bin/server.js"
+  },
+  "repository": "https://chutiphon-k@github.com/chutiphon-k/express-mysql-boilerplate.git",
+  "author": "Chutiphon.k <chutiphon.k@ku.th>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "compression": "^1.6.2",
+    "config": "^1.25.1",
+    "cors": "^2.8.1",
+    "cross-env": "^4.0.0",
+    "express": "^4.15.2",
+    "socket.io": "^1.7.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",    
+    "babel-eslint": "^7.2.1",
+    "babel-plugin-module-resolver": "^2.7.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "errorhandler": "^1.5.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1",
+    "node-notifier": "^5.0.2",
+    "nodemon": "^1.11.0"
+  }
+}
