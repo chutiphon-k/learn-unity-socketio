@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+	[HideInInspector]
+	public GameObject playerFrom;
+
+	void OnCollisionEnter(Collision collision)
+	{
+		var hit = collision.gameObject;
+		var health = hit.GetComponent<Health>();
+		if(health != null){
+			health.TakeDamage(playerFrom, 10);
+		}
+		Destroy(gameObject);
 	}
 }
