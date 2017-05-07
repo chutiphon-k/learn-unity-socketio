@@ -80,8 +80,13 @@
 -define:UNITY_EDITOR_OSX
 -define:UNITY_TEAM_LICENSE
 'Assets/Scripts/Billboard.cs'
+'Assets/Scripts/Bullet.cs'
+'Assets/Scripts/EnemySpawner.cs'
 'Assets/Scripts/Health.cs'
+'Assets/Scripts/NetworkManager.cs'
 'Assets/Scripts/PlayerController.cs'
+'Assets/Scripts/PlayerSpawner.cs'
+'Assets/Scripts/SpawnPoint.cs'
 -r:'/Applications/Unity/Unity.app/Contents/MonoBleedingEdge/lib/mono/unity/System.Runtime.Serialization.dll'
 -r:'/Applications/Unity/Unity.app/Contents/MonoBleedingEdge/lib/mono/unity/System.Xml.Linq.dll'
 -r:'/Applications/Unity/Unity.app/Contents/MonoBleedingEdge/lib/mono/unity/UnityScript.dll'

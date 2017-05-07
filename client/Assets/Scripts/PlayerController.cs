@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
 	public void CmdFire(){
 		var bullet = Instantiate(bulletPrefab, bulletSpawn.position, bulletSpawn.rotation) as GameObject;
 		Bullet b = bullet.GetComponent<Bullet>();
-		// b.playerFrom = this.gameObject;
+		b.playerFrom = this.gameObject;
 		bullet.GetComponent<Rigidbody>().velocity = bullet.transform.up * 6;
 
 		Destroy(bullet, 2.0f);

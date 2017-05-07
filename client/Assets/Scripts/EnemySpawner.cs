@@ -18,6 +18,7 @@ public class EnemySpawner : MonoBehaviour {
 			SpawnPoint enemySpawnPoint = (Instantiate(spawnPoint, spawnPosition, spawnRotation) as GameObject).GetComponent<SpawnPoint>();
 			enemySpawnPoints.Add(enemySpawnPoint);
 		}
+		SpawnEnemies();		
 	}
 	
 	public void SpawnEnemies(){
@@ -32,6 +33,7 @@ public class EnemySpawner : MonoBehaviour {
 			Health h = newEnemy.GetComponent<Health>();
 			h.currentHealth = 100;
 			h.OnChangeHealth();
+			h.destroyOnDeath = true;
 			h.isEnemy = true;
 			i++;
 		}

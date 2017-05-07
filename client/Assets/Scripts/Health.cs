@@ -19,6 +19,7 @@ public class Health : MonoBehaviour {
 	
 	public void TakeDamage(GameObject playerFrom, int amount){
 		currentHealth -= amount;
+		OnChangeHealth();
 	}
 
 	public void OnChangeHealth() {
