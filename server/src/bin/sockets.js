@@ -59,6 +59,19 @@ let init = (server) => {
 				socket.broadcast.emit('other player connected', currentPlayer)
 			}
 		})
+
+		socket.on('player move', (data) => {
+			console.log(`recv: move: ${JSON.stringify(data)}`)
+			currentPlayer.position = data.position
+			socket.broadcast.emit('player move', currentPlayer)
+		})
+
+		socket.on('player turn', (data) => {
+			console.log(`recv: turn: ${JSON.stringify(data)}`)
+			currentPlayer.rotation = data.rotation
+			socket.broadcast.emit('player turn', currentPlayer)
+		})
+
 	})
 }
 
