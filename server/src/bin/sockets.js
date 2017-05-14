@@ -72,6 +72,54 @@ let init = (server) => {
 			socket.broadcast.emit('player turn', currentPlayer)
 		})
 
+		socket.on('player shoot', () => {
+			console.log(`${currentPlayer.name} recv: shoot`)
+			let data = {
+				name: currentPlayer.name
+			}
+			console.log(`${currentPlayer.name} bcst: shoot: ${JSON.stringify(data)}`)
+			socket.emit('player shoot', data)
+			socket.broadcast.emit('player shoot', data)
+		})
+
+		socket.on('health', (data) => {
+			console.log(`${currentPlayer.name} recv: health: ${JSON.stringify(data)}`)
+			if (data.from === currentPlayer.name) {
+				let indexDamaged = 0
+				if (!data.isEnemy) {
+					clients = clients.map((client, index) => {
+						if (client.name === data.name) {
+							indexDamaged = index
+							client.health -= data.healthChange
+						}
+						return client
+					})
+				} else {
+					enemies = enemies.map((enemy, index) => {
+						if (enemy.name === data.name) {
+							indexDamaged = index
+							enemy.health -= data.healthChange
+						}
+						return enemy
+					})
+				}
+				let response = {
+					name: (!data.isEnemy) ? clients[indexDamaged].name : enemies[indexDamaged].name,
+					health: (!data.isEnemy) ? clients[indexDamaged].health : enemies[indexDamaged].health
+				}
+				console.log(`${currentPlayer.name} bcst: health: ${JSON.stringify(response)}`)
+				socket.emit('health', response)
+				socket.broadcast.emit('health', response)
+			}
+		})
+
+		socket.on('disconnect', () => {
+			console.log(`${currentPlayer.name} recv: disconnect ${currentPlayer.name}`)
+			socket.broadcast.emit('other player disconnected', currentPlayer)
+			console.log(`${currentPlayer.name} bcst: other player disconnected ${currentPlayer}`)
+			let index = clients.findIndex(client => client.name === currentPlayer.name)
+			clients.splice(index, 1)
+		})
 	})
 }
 
