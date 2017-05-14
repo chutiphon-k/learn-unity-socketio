@@ -9,3 +9,4 @@
 - Socket.io
 - ExpressJs
 - Babel
+- Eslint
