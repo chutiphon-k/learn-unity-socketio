@@ -27,7 +27,7 @@ let init = (server) => {
 		socket.on('play', (data) => {
 			console.log(`${currentPlayer.name} recv: play:: ${JSON.stringify(data)}`)
 			if(clients.length === 0){
-				numberOfEnemies = data.enemySpawnPoints.length
+				// numberOfEnemies = data.enemySpawnPoints.length
 				enemies = []
 				data.enemySpawnPoints.map((enemySpawnPoint) => {
 					enemies.push({
@@ -56,6 +56,7 @@ let init = (server) => {
 				}
 				clients.push(currentPlayer)
 				console.log(`${currentPlayer.name} emit: play: ${JSON.stringify(currentPlayer)}`)
+				socket.emit('play', currentPlayer)
 				socket.broadcast.emit('other player connected', currentPlayer)
 			}
 		})
