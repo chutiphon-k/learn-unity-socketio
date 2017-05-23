@@ -27,7 +27,8 @@ public class NetworkManager : MonoBehaviour {
 		socket.On("other player connected", OnOtherPlayerConnected);
 		socket.On("play", OnPlay);
 		socket.On("player move", OnPlayerMove);
-		socket.On("player turn", OnPlayerShoot);
+		socket.On("player turn", OnPlayerTurn);
+		socket.On("player shoot", OnPlayerShoot);
 		socket.On("health", OnHealth);
 		socket.On("other player disconnected", OnOtherPlayerDisconnect);
 	}
@@ -71,14 +72,18 @@ public class NetworkManager : MonoBehaviour {
 		UserJSON currentUserJSON = UserJSON.CreateFromJSON(data);
 		Vector3 position = new Vector3(currentUserJSON.position[0], currentUserJSON.position[1], currentUserJSON.position[2]);
 		Quaternion rotation = Quaternion.Euler(currentUserJSON.rotation[0], currentUserJSON.rotation[1], currentUserJSON.rotation[2]);
-		GameObject p = GameObject.Find(currentUserJSON.name) as GameObject;
+		GameObject p = Instantiate(player, position, rotation) as GameObject;
 		PlayerController pc = p.GetComponent<PlayerController>();
 		Transform t = p.transform.Find("Healthbar Canvas");
 		Transform t1 = t.transform.Find("Player Name");
 		Text playerName = t1.GetComponent<Text>();
 		playerName.text = currentUserJSON.name;
-		pc.isLocalPlayer = false;
+		pc.isLocalPlayer = true;
 		p.name = currentUserJSON.name;
+	}
+
+	void OnPlayerTurn(SocketIOEvent socketIOEvent){
+
 	}
 
 	void OnPlayerMove(SocketIOEvent socketIOEvent){
@@ -94,7 +99,10 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	void OnOtherPlayerDisconnect(SocketIOEvent socketIOEvent){
-
+		print("user disconnected");
+		string data = socketIOEvent.data.ToString();
+		UserJSON userJSON = UserJSON.CreateFromJSON(data);
+		Destroy(GameObject.Find(userJSON.name));
 	}
 
 	IEnumerator ConnectToServer(){
@@ -129,7 +137,7 @@ public class NetworkManager : MonoBehaviour {
 			}
 			foreach(SpawnPoint enemySpawnPoint in _enemySpawnPoints){
 				PointJSON pointJSON = new PointJSON(enemySpawnPoint);
-				playerSpawnPoints.Add(pointJSON);
+				enemySpawnPoints.Add(pointJSON);
 			}
 		}
 	}
