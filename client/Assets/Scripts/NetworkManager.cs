@@ -37,7 +37,9 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	void OnEnemies(SocketIOEvent socketIOEvent){
-
+		EnemiesJSON enemiesJSON = EnemiesJSON.CreateFromJSON(socketIOEvent.data.ToString());
+		EnemySpawner es = GetComponent<EnemySpawner>();
+		es.SpawnEnemies(enemiesJSON);
 	}
 
 	void OnOtherPlayerConnected(SocketIOEvent socketIOEvent){
@@ -98,7 +100,7 @@ public class NetworkManager : MonoBehaviour {
 	IEnumerator ConnectToServer(){
 		yield return new WaitForSeconds(0.5f);
 
-		socket.Emit("player connected");
+		socket.Emit("player connect");
 
 		yield return new WaitForSeconds(1f);
 
