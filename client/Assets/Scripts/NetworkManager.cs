@@ -109,7 +109,13 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	void OnHealth(SocketIOEvent socketIOEvent){
-
+		print("changing the health");
+		string data = socketIOEvent.data.ToString();
+		UserHealthJSON userHealthJSON = UserHealthJSON.CreateFromJSON(data);
+		GameObject p = GameObject.Find(userHealthJSON.name);
+		Health h = p.GetComponent<Health>();
+		h.currentHealth = userHealthJSON.health;
+		h.OnChangeHealth();
 	}
 
 	void OnOtherPlayerDisconnect(SocketIOEvent socketIOEvent){
@@ -148,6 +154,12 @@ public class NetworkManager : MonoBehaviour {
 	public void CommandShoot(){
 		print("Shoot");
 		socket.Emit("player shoot");
+	}
+
+	public void CommandHealthChange(GameObject playerFrom, GameObject playerTo, int healthChange, bool isEnemy){
+		print("health change cmd");
+		HealthChangeJSON healthChangeJSON = new HealthChangeJSON(playerTo.name, healthChange, playerFrom.name, isEnemy);
+		socket.Emit("health", new JSONObject(JsonUtility.ToJson(healthChangeJSON)));
 	}
 
 	[Serializable]
