@@ -20,14 +20,14 @@ let init = (server) => {
 					rotation: client.rotation,
 					health: client.health
 				})
-				console.log(`${currentPlayer.name} emit: other player connected: ${JSON.stringify(client)}`)
+				console.log(`${currentPlayer.name} emit: other player connected: ${JSON.stringify(client)}\n`)
 			})
 		})
 
 		socket.on('play', (data) => {
 			console.log(`${currentPlayer.name} recv: play:: ${JSON.stringify(data)}`)
-			if(clients.length === 0){
-				numberOfEnemies = data.enemySpawnPoints.length
+			if (clients.length === 0) {
+					// numberOfEnemies = data.enemySpawnPoints.length
 				enemies = []
 				data.enemySpawnPoints.map((enemySpawnPoint) => {
 					enemies.push({
@@ -44,20 +44,21 @@ let init = (server) => {
 						rotation: _playerSpawnPoint.rotation
 					})
 				})
-				let enemiesResponse = { enemies }
-				console.log(`${currentPlayer.name} emit: enemies: ${JSON.stringify(enemiesResponse)}`)
-				socket.emit('enemies', enemiesResponse)
-				let randomSpawnPoint = playerSpawnPoints[Math.floor(Math.random() * playerSpawnPoints.length)]
-				currentPlayer = {
-					name: data.name,
-					position: randomSpawnPoint.position,
-					rotation: randomSpawnPoint.rotation,
-					health: 100
-				}
-				clients.push(currentPlayer)
-				console.log(`${currentPlayer.name} emit: play: ${JSON.stringify(currentPlayer)}`)
-				socket.broadcast.emit('other player connected', currentPlayer)
 			}
+			let enemiesResponse = { enemies }
+			console.log(`${currentPlayer.name} emit: enemies: ${JSON.stringify(enemiesResponse)}`)
+			socket.emit('enemies', enemiesResponse)
+			let randomSpawnPoint = playerSpawnPoints[Math.floor(Math.random() * playerSpawnPoints.length)]
+			currentPlayer = {
+				name: data.name,
+				position: randomSpawnPoint.position,
+				rotation: randomSpawnPoint.rotation,
+				health: 100
+			}
+			clients.push(currentPlayer)
+			console.log(`${currentPlayer.name} emit: play: ${JSON.stringify(currentPlayer)}`)
+			socket.emit('play', currentPlayer)
+			socket.broadcast.emit('other player connected', currentPlayer)
 		})
 
 		socket.on('player move', (data) => {

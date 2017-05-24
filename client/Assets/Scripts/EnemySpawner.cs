@@ -18,24 +18,23 @@ public class EnemySpawner : MonoBehaviour {
 			SpawnPoint enemySpawnPoint = (Instantiate(spawnPoint, spawnPosition, spawnRotation) as GameObject).GetComponent<SpawnPoint>();
 			enemySpawnPoints.Add(enemySpawnPoint);
 		}
-		SpawnEnemies();		
+		// SpawnEnemies();		
 	}
 	
-	public void SpawnEnemies(){
-		int i = 0;
-		foreach(SpawnPoint sp in enemySpawnPoints){
-			Vector3 position = sp.transform.position;
-			Quaternion rotation = sp.transform.rotation;
+	public void SpawnEnemies(NetworkManager.EnemiesJSON enemiesJSON){
+		foreach(NetworkManager.UserJSON enemyJSON in enemiesJSON.enemies){
+			if(enemyJSON.health <= 0) continue;
+			Vector3 position = new Vector3(enemyJSON.position[0], enemyJSON.position[1], enemyJSON.position[2]);
+			Quaternion rotation = Quaternion.Euler(enemyJSON.rotation[0], enemyJSON.rotation[1], enemyJSON.rotation[2]);
 			GameObject newEnemy = Instantiate(enemy, position, rotation) as GameObject;
-			newEnemy.name = i+"";
+			newEnemy.name = enemyJSON.name;
 			PlayerController pc = newEnemy.GetComponent<PlayerController>();
 			pc.isLocalPlayer = false;
 			Health h = newEnemy.GetComponent<Health>();
-			h.currentHealth = 100;
+			h.currentHealth = enemyJSON.health;
 			h.OnChangeHealth();
 			h.destroyOnDeath = true;
 			h.isEnemy = true;
-			i++;
 		}
 	}
 }
