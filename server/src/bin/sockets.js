@@ -13,7 +13,6 @@ let init = (server) => {
 
 		socket.on('player connect', () => {
 			console.log(`${currentPlayer.name} recv: player connect`)
-			console.log('------------', clients)
 			clients.map((client) => {
 				socket.emit('other player connected', {
 					name: client.name,
@@ -120,7 +119,7 @@ let init = (server) => {
 			socket.broadcast.emit('other player disconnected', currentPlayer)
 			console.log(`${currentPlayer.name} bcst: other player disconnected ${currentPlayer}`)
 			let index = clients.findIndex(client => client.name === currentPlayer.name)
-			// clients.splice(index, 1)
+			clients.splice(index, 1)
 		})
 	})
 }

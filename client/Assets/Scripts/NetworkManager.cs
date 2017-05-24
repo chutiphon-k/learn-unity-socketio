@@ -82,16 +82,30 @@ public class NetworkManager : MonoBehaviour {
 		p.name = currentUserJSON.name;
 	}
 
-	void OnPlayerTurn(SocketIOEvent socketIOEvent){
-
+	void OnPlayerMove(SocketIOEvent socketIOEvent){
+		string data = socketIOEvent.data.ToString();
+		UserJSON userJSON = UserJSON.CreateFromJSON(data);
+		Vector3 position = new Vector3(userJSON.position[0], userJSON.position[1], userJSON.position[2]);
+		if(userJSON.name == playerNameInput.text) return;
+		GameObject p = GameObject.Find(userJSON.name) as GameObject;
+		if(p != null) p.transform.position = position;
 	}
 
-	void OnPlayerMove(SocketIOEvent socketIOEvent){
-
+	void OnPlayerTurn(SocketIOEvent socketIOEvent){
+		string data = socketIOEvent.data.ToString();
+		UserJSON userJSON = UserJSON.CreateFromJSON(data);
+		Quaternion rotation = Quaternion.Euler(userJSON.rotation[0], userJSON.rotation[1], userJSON.rotation[2]);
+		if(userJSON.name == playerNameInput.text) return;
+		GameObject p = GameObject.Find(userJSON.name) as GameObject;
+		if(p != null) p.transform.rotation = rotation;
 	}
 
 	void OnPlayerShoot(SocketIOEvent socketIOEvent){
-
+		string data = socketIOEvent.data.ToString();
+		ShootJSON shootJSON = ShootJSON.CreateFromJSON(data);
+		GameObject p = GameObject.Find(shootJSON.name);
+		PlayerController pc = p.GetComponent<PlayerController>();
+		pc.CmdFire();
 	}
 
 	void OnHealth(SocketIOEvent socketIOEvent){
@@ -119,6 +133,21 @@ public class NetworkManager : MonoBehaviour {
 		string data = JsonUtility.ToJson(playerJSON);
 		socket.Emit("play", new JSONObject(data));
 		canvas.gameObject.SetActive(false);
+	}
+
+	public void CommandMove(Vector3 vec3){
+		string data = JsonUtility.ToJson(new PositionJSON(vec3));
+		socket.Emit("player move", new JSONObject(data));
+	}
+
+	public void CommandRotate(Quaternion quat){
+		string data = JsonUtility.ToJson(new RotationJSON(quat));
+		socket.Emit("player turn", new JSONObject(data));
+	}
+
+	public void CommandShoot(){
+		print("Shoot");
+		socket.Emit("player shoot");
 	}
 
 	[Serializable]
